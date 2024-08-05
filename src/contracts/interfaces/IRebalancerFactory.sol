@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.4;
 
-import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
+import {IPoolFactory} from "./factories/IPoolFactory.sol";
 
 interface IRebalancerFactory {
     struct RebalancerFee {
@@ -27,7 +27,7 @@ interface IRebalancerFactory {
         uint256 newSummarizationFrequency
     );
 
-    function uniswapV3Factory() external view returns (IUniswapV3Factory);
+    function poolFactory() external view returns (IPoolFactory);
     function owner() external view returns (address);
     function summarizationFrequency() external view returns (uint256);
     function rebalancerFee()

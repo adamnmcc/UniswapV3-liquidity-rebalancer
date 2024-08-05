@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.4;
 
-import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
+import "./interfaces/IPool.sol";
+import {IPoolFactory} from "./interfaces/factories/IPoolFactory.sol";
 import "./interfaces/IRebalancerFactory.sol";
 import "./interfaces/IRebalancer.sol";
 import "./RebalancerDeployer.sol";
@@ -13,8 +13,7 @@ contract RebalancerFactory is
     RebalancerDeployer,
     NoDelegateCall
 {
-    IUniswapV3Factory public immutable override uniswapV3Factory =
-        IUniswapV3Factory(0x1F98431c8aD98523631AE4a59f267346ea31F984);
+    
 
     RebalancerFee public override rebalancerFee = RebalancerFee(0, 0);
     mapping(address => address) public override getRebalancer;
@@ -78,9 +77,8 @@ contract RebalancerFactory is
         address tokenB,
         uint24 fee
     ) external override onlyOwner noDelegateCall returns (address rebalancer) {
-        IUniswapV3Pool pool = IUniswapV3Pool(
-            uniswapV3Factory.getPool(tokenA, tokenB, fee)
-        );
+        address pool = IPoolFactory(0x420DD381b31aEf6683db6B902084cB0FFECe40Da).getPool(tokenA, tokenB, true);
+
         require(
             address(pool) != address(0),
             "Provided UniswapV3 pool doesn't exist. Check inputs"

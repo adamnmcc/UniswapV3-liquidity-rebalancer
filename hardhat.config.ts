@@ -11,7 +11,7 @@ export default {
         hardhat: {
             port: 8565,
             forking: {
-                url: "http://127.0.0.1:8545",
+                url: "http://127.0.0.1:7545",
                 enabled: true
             },
             mining: {

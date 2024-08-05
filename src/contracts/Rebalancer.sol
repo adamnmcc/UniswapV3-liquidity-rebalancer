@@ -7,10 +7,10 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
-import "@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager.sol";
-import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+import "./interfaces/IPool.sol";
+import "./libraries/FullMath.sol";
+import "./interfaces/INonfungiblePositionManager.sol";
+import "./interfaces/IRouter.sol";
 import "./interfaces/IRebalancerDeployer.sol";
 import "./interfaces/IRebalancerFactory.sol";
 import "./interfaces/IRebalancer.sol";
@@ -19,16 +19,16 @@ contract Rebalancer is IRebalancer, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     IRebalancerFactory public immutable override factory;
-    IUniswapV3Pool public immutable override pool;
+    IPool public immutable override pool;
     IERC20 public immutable override token0;
     IERC20 public immutable override token1;
 
     IERC721 public immutable override posNFT =
-        IERC721(0xC36442b4a4522E871399CD717aBDD847Ab11FE88);
+        IERC721(0x827922686190790b37229fd06084350E74485b72);
     INonfungiblePositionManager public immutable override positionManager =
-        INonfungiblePositionManager(0xC36442b4a4522E871399CD717aBDD847Ab11FE88);
-    ISwapRouter public immutable override swapRouter =
-        ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+        INonfungiblePositionManager(0x827922686190790b37229fd06084350E74485b72);
+    IRouter public immutable override swapRouter =
+        IRouter(0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43);
 
     Totals public override feesIncome = Totals({amount0: 0, amount1: 0});
     Totals public override inStake = Totals({amount0: 0, amount1: 0});
@@ -68,7 +68,7 @@ contract Rebalancer is IRebalancer, ReentrancyGuard {
         factory = IRebalancerFactory(factoryAddress);
 
         // We are not allowed to use immutable storage variables in constructor
-        IUniswapV3Pool pool_ = IUniswapV3Pool(poolAddress);
+        IPool pool_ = IPool(poolAddress);
         pool = pool_;
 
         token0 = IERC20(pool_.token0());
@@ -442,7 +442,7 @@ contract Rebalancer is IRebalancer, ReentrancyGuard {
         sellToken.safeIncreaseAllowance(address(swapRouter), tokenInAmount);
 
         tokenOutAmount = swapRouter.exactInputSingle(
-            ISwapRouter.ExactInputSingleParams({
+            IRouter.ExactInputSingleParams({
                 tokenIn: address(sellToken),
                 tokenOut: address(buyToken),
                 fee: pool.fee(),

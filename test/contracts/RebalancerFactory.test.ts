@@ -27,8 +27,8 @@ describe("Test RebalancerFactory contract", () => {
         expect(await rebalancerFactory.owner()).to.be.equal(
             await owner.getAddress()
         );
-        expect(await rebalancerFactory.uniswapV3Factory()).to.be.equal(
-            "0x1F98431c8aD98523631AE4a59f267346ea31F984"
+        expect(await rebalancerFactory.poolFactory()).to.be.equal(
+            "0x420DD381b31aEf6683db6B902084cB0FFECe40Da"
         );
         const rebalancerFee = await rebalancerFactory.rebalancerFee();
         expect(rebalancerFee.numerator).to.be.equal(0);

@@ -3,9 +3,9 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
-import "@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager.sol";
+import {IPool} from "./IPool.sol";
+import "./IRouter.sol";
+import "./INonfungiblePositionManager.sol";
 import "./IRebalancerFactory.sol";
 
 interface IRebalancer {
@@ -129,7 +129,7 @@ interface IRebalancer {
     // Properties
     function factory() external view returns (IRebalancerFactory);
 
-    function pool() external view returns (IUniswapV3Pool);
+    function pool() external view returns (IPool);
 
     function token0() external view returns (IERC20);
 
@@ -142,7 +142,7 @@ interface IRebalancer {
         view
         returns (INonfungiblePositionManager);
 
-    function swapRouter() external view returns (ISwapRouter);
+    function swapRouter() external view returns (IRouter);
 
     function feesIncome()
         external
